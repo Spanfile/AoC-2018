@@ -50,7 +50,6 @@ pub fn solve_2() {
             end = end.get(1..end.len()).unwrap();
             let id = start.to_owned() + end;
             println!("{}", id);
-            println!("srijafjzloguvlntqmphenbkd");
         }
     }
 }
