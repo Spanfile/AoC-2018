@@ -249,54 +249,57 @@ rrivafyzloguvxjctqmphenbkd
 srijifyzdoguvxwctqmphenbka
 hrijafyzloguvxectqmpheybkd";
 
-use std::collections::HashMap;
+extern crate counter;
+
+use self::counter::Counter;
 
 pub fn solve_1() {
-    let split: Vec<&str> = INPUT.split("\n").collect();
+    let lines: Vec<&str> = INPUT.lines().collect();
     let mut twos = 0;
     let mut threes = 0;
-    for s in split {
-        let mut letters: HashMap<String, i32> = HashMap::new();
-        for c in s.chars() {
-            let value = letters.entry(c.to_string()).or_insert(0);
-            *value += 1;
+    for s in lines {
+        let mut letters = s.chars().collect::<Counter<_>>();
+        let mut letter_counts: Vec<usize> = letters
+            .most_common_ordered()
+            .into_iter()
+            .map(|(_, c)| c)
+            .filter(|c| *c != 1)
+            .collect();
+        letter_counts.dedup();
+
+        if letter_counts.contains(&3) {
+            threes += 1;
         }
-        for (_, v) in &letters {
-            if *v == 2 {
-                twos += 1;
-                break;
-            }
-        }
-        for (_, v) in &letters {
-            if *v == 3 {
-                threes += 1;
-                break;
-            }
+        if letter_counts.contains(&2) {
+            twos += 1;
         }
     }
     println!("1: {}", twos * threes);
 }
 
 pub fn solve_2() {
-    let split: Vec<&str> = INPUT.split("\n").collect();
-    for (i1, s1) in split[..split.len()].iter().enumerate() {
-        let slice = &split[i1 + 1..];
-        for s2 in slice {
+    let lines: Vec<&str> = INPUT.lines().collect();
+    for (i, s1) in lines[..lines.len()].iter().enumerate() {
+        let check_lines = &lines[i + 1..];
+        'outer: for s2 in check_lines {
             let mut differences = 0;
-            let mut last_difference_at = 0;
+            let mut difference_at = 0;
             for i in 0..s1.len() {
                 if (*s1).as_bytes()[i] != (*s2).as_bytes()[i] {
-                    differences += 1;
-                    last_difference_at = i;
-                    if differences >= 2 {
-                        break;
+                    if differences == 1 {
+                        continue 'outer;
                     }
+
+                    differences += 1;
+                    difference_at = i;
                 }
             }
 
-            if differences == 1 {
-                println!("{} and\n{} differ at {}", *s1, *s2, last_difference_at);
-            }
+            let (start, mut end) = (*s1).split_at(difference_at);
+            end = end.get(1..end.len()).unwrap();
+            let id = start.to_owned() + end;
+            println!("{}", id);
+            println!("srijafjzloguvlntqmphenbkd");
         }
     }
 }

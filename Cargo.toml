@@ -4,3 +4,4 @@ version = "0.1.0"
 authors = ["Spanfile <spansdev@gmail.com>"]
 
 [dependencies]
+counter = "0.4.3"
