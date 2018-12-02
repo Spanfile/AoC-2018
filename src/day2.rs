@@ -263,9 +263,7 @@ pub fn solve_1() {
             .most_common_ordered()
             .into_iter()
             .map(|(_, c)| c)
-            .filter(|c| *c != 1)
             .collect();
-        letter_counts.dedup();
 
         if letter_counts.contains(&3) {
             threes += 1;
