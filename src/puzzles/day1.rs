@@ -1,6 +1,11 @@
 use aoc_derive::aoc;
 use std::collections::HashSet;
 use input;
+use super::runner;
+
+pub fn solve() {
+    runner::run_solutions(&do_solve_1, &do_solve_2);
+}
 
 #[aoc(1)]
 fn solve_1(input: String) {
@@ -11,7 +16,7 @@ fn solve_1(input: String) {
         answer += s.parse::<i32>().unwrap();
     }
 
-    println!("1: {}", answer);
+    println!("{}", answer);
 }
 
 #[aoc(1)]
@@ -24,7 +29,7 @@ fn solve_2(input: String) {
         for s in &lines {
             cur += s.parse::<i32>().unwrap();
             if freqs.contains(&cur) {
-                println!("2: {}", cur);
+                println!("{}", cur);
                 return;
             }
             freqs.insert(cur);

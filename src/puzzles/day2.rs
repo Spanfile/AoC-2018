@@ -1,6 +1,11 @@
 use aoc_derive::aoc;
 use counter::Counter;
 use input;
+use super::runner;
+
+pub fn solve() {
+    runner::run_solutions(&do_solve_1, &do_solve_2);
+}
 
 #[aoc(2)]
 fn solve_1(input: String) {
@@ -24,7 +29,7 @@ fn solve_1(input: String) {
             twos += 1;
         }
     }
-    println!("1: {}", twos * threes);
+    println!("{}", twos * threes);
 }
 
 #[aoc(2)]
