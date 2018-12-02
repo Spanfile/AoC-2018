@@ -2,9 +2,10 @@ extern crate aoc_derive;
 extern crate counter;
 extern crate reqwest;
 
-mod day1;
+mod input;
+mod day2;
 
 fn main() {
-    day1::solve_1();
-    day1::solve_2();
+    day2::do_solve_1();
+    day2::do_solve_2();
 }

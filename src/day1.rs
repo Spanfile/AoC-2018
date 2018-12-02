@@ -1,9 +1,9 @@
-#[macro_use]
 use aoc_derive::aoc;
 use std::collections::HashSet;
+use input;
 
 #[aoc(1)]
-pub fn solve_1(input: String) {
+fn solve_1(input: String) {
     let lines = input.lines();
 
     let mut answer: i32 = 0;
@@ -14,7 +14,8 @@ pub fn solve_1(input: String) {
     println!("1: {}", answer);
 }
 
-pub fn solve_2(input: String) {
+#[aoc(1)]
+fn solve_2(input: String) {
     let lines: Vec<&str> = input.lines().collect();
 
     let mut freqs = HashSet::new();

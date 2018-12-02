@@ -1,9 +1,10 @@
+use aoc_derive::aoc;
 use counter::Counter;
 use input;
 
-pub fn solve_1() {
-    let puzzle_input = input::get(2);
-    let lines = puzzle_input.lines();
+#[aoc(2)]
+fn solve_1(input: String) {
+    let lines = input.lines();
 
     let mut twos = 0;
     let mut threes = 0;
@@ -26,9 +27,9 @@ pub fn solve_1() {
     println!("1: {}", twos * threes);
 }
 
-pub fn solve_2() {
-    let puzzle_input = input::get(2);
-    let lines: Vec<&str> = puzzle_input.lines().collect();
+#[aoc(2)]
+fn solve_2(input: String) {
+    let lines: Vec<&str> = input.lines().collect();
 
     for (i, s1) in lines[..lines.len()].iter().enumerate() {
         let check_lines = &lines[i + 1..];
