@@ -1,9 +1,10 @@
-use input;
+#[macro_use]
+use aoc_derive::aoc;
 use std::collections::HashSet;
 
-pub fn solve_1() {
-    let puzzle_input = input::get(1);
-    let lines = puzzle_input.lines();
+#[aoc(1)]
+pub fn solve_1(input: String) {
+    let lines = input.lines();
 
     let mut answer: i32 = 0;
     for s in lines {
@@ -13,9 +14,8 @@ pub fn solve_1() {
     println!("1: {}", answer);
 }
 
-pub fn solve_2() {
-    let puzzle_input = input::get(1);
-    let lines: Vec<&str> = puzzle_input.lines().collect();
+pub fn solve_2(input: String) {
+    let lines: Vec<&str> = input.lines().collect();
 
     let mut freqs = HashSet::new();
     let mut cur = 0;

@@ -7,6 +7,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "aoc-2018"
 version = "0.1.0"
 dependencies = [
+ "aoc-derive 0.1.0",
+ "counter 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "reqwest 0.9.5 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "aoc-derive"
+version = "0.1.0"
+dependencies = [
  "counter 0.4.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "reqwest 0.9.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]

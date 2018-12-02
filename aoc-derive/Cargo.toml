@@ -1,9 +1,12 @@
 [package]
-name = "aoc-2018"
+name = "aoc-derive"
 version = "0.1.0"
 authors = ["Spanfile <spansdev@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 counter = "0.4.3"
 reqwest = "0.9.5"
-aoc-derive = { path = "aoc-derive" }
+
+[lib]
+proc-macro = true
