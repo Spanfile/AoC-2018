@@ -3,7 +3,6 @@ use aoc_derive::aoc;
 use input;
 use std::collections::HashMap;
 use std::collections::HashSet;
-use std::iter::FromIterator;
 use std::num::ParseIntError;
 use std::str::FromStr;
 
@@ -50,16 +49,11 @@ impl Claim {
         indices
     }
 
-    fn plane_coords_set(&self) -> HashSet<(i32, i32)> {
-        let mut indices = HashSet::new();
-
-        for y in self.y..self.y + self.h {
-            for x in self.x..self.x + self.w {
-                indices.insert((x, y));
-            }
-        }
-
-        indices
+    fn collides_with(&self, other: &Claim) -> bool {
+        self.x < other.x + other.w
+            && self.x + self.w > other.x
+            && self.y < other.y + other.h
+            && self.y + self.h > other.y
     }
 }
 
@@ -71,20 +65,18 @@ pub fn solve() {
 fn solve_1(input: String) {
     let lines = input.lines();
 
-    let mut fabric = HashSet::new();
-    let mut counted = HashSet::new();
+    let mut fabric: HashMap<(i32, i32), i32> = HashMap::with_capacity(1301);
     let mut overlaps = 0;
 
     for line in lines {
         let claim = line.parse::<Claim>().unwrap();
         for i in claim.plane_coords() {
-            if fabric.contains(&i) && !counted.contains(&i) {
-                overlaps += 1;
-                counted.insert(i);
-                continue;
-            }
+            let mut entry = fabric.entry(i).or_insert(0);
+            *entry += 1;
 
-            fabric.insert(i);
+            if *entry == 2 {
+                overlaps += 1;
+            }
         }
     }
 
@@ -95,28 +87,24 @@ fn solve_1(input: String) {
 fn solve_2(input: String) {
     let lines = input.lines();
 
-    let mut fabric: HashMap<i32, HashSet<(i32, i32)>> = HashMap::new();
+    let mut fabric: HashMap<i32, Claim> = HashMap::new();
+    let mut ids = HashSet::new();
     let mut to_delete = HashSet::new();
 
     for line in lines {
         let claim = line.parse::<Claim>().unwrap();
-        fabric.insert(claim.id, claim.plane_coords_set());
-    }
 
-    for (id1, coords1) in &fabric {
-        for (id2, coords2) in &fabric {
-            if id1 == id2 {
-                continue;
-            }
-
-            if !coords1.is_disjoint(coords2) {
-                to_delete.insert(*id1);
-                to_delete.insert(*id2);
+        for (id, other) in &fabric {
+            if claim.collides_with(other) {
+                to_delete.insert(claim.id);
+                to_delete.insert(*id);
             }
         }
+
+        ids.insert(claim.id);
+        fabric.insert(claim.id, claim);
     }
 
-    let keys: HashSet<i32> = HashSet::from_iter(fabric.keys().cloned());
-    let diff = keys.difference(&to_delete);
+    let diff = ids.difference(&to_delete);
     println!("{:?}", diff);
 }
