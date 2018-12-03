@@ -1,7 +1,7 @@
-use aoc_derive::aoc;
-use std::collections::HashSet;
-use input;
 use super::runner;
+use aoc_derive::aoc;
+use input;
+use std::collections::HashSet;
 
 pub fn solve() {
     runner::run_solutions(&do_solve_1, &do_solve_2);

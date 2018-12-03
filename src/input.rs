@@ -24,10 +24,11 @@ fn get_live(day: &i32) -> String {
             fs::read_to_string("session")
                 .expect("error reading session file")
                 .trim(),
-        ).send()
+        )
+        .send()
     {
         Ok(mut resp) => match resp.text() {
-            Ok(text) => text,
+            Ok(text) => String::from(text.trim()),
             Err(err) => panic!("error reading body: {}", err),
         },
         Err(err) => panic!("error requesting input: {}", err),

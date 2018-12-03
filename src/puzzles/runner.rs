@@ -12,5 +12,8 @@ fn timeit(func: &Fn() -> ()) {
     let start = Instant::now();
     func();
     let duration = start.elapsed();
-    println!("Time taken: {}ms", duration.as_micros() as f64 / 1000 as f64);
+    println!(
+        "Time taken: {}ms",
+        duration.as_micros() as f64 / 1000 as f64
+    );
 }

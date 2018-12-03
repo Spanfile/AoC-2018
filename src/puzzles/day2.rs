@@ -1,7 +1,7 @@
+use super::runner;
 use aoc_derive::aoc;
 use counter::Counter;
 use input;
-use super::runner;
 
 pub fn solve() {
     runner::run_solutions(&do_solve_1, &do_solve_2);
