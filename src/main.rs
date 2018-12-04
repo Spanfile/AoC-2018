@@ -3,6 +3,7 @@
 extern crate aoc_derive;
 extern crate counter;
 extern crate reqwest;
+extern crate sorted_list;
 
 mod input;
 mod puzzles;

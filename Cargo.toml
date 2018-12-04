@@ -6,4 +6,5 @@ authors = ["Spanfile <spansdev@gmail.com>"]
 [dependencies]
 counter = "0.4.3"
 reqwest = "0.9.5"
+sorted-list = "0.2.0"
 aoc-derive = { path = "aoc-derive" }
