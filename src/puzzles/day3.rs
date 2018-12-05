@@ -20,15 +20,15 @@ impl FromStr for Claim {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let args: Vec<&str> = s.split_whitespace().into_iter().collect();
 
-        let id: i32 = args[0][1..].parse::<i32>().unwrap();
+        let id = args[0][1..].parse().unwrap();
 
         let xy: Vec<&str> = args[2].split(",").into_iter().collect();
-        let x = xy[0].parse::<i32>().unwrap();
-        let y = xy[1].trim_right_matches(':').parse::<i32>().unwrap();
+        let x = xy[0].parse().unwrap();
+        let y = xy[1].trim_right_matches(':').parse().unwrap();
 
         let wh: Vec<&str> = args[3].split("x").into_iter().collect();
-        let w = wh[0].parse::<i32>().unwrap();
-        let h = wh[1].parse::<i32>().unwrap();
+        let w = wh[0].parse().unwrap();
+        let h = wh[1].parse().unwrap();
 
         // println!("#{} @ {},{}: {}x{}", id, x, y, w, h);
 

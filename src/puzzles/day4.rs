@@ -28,16 +28,16 @@ impl FromStr for Timestamp {
             .trim_matches(x)
             .split_whitespace()
             .into_iter()
-            .collect::<Vec<&str>>();
+            .collect::<Vec<_>>();
 
-        let date_args = args[0].split('-').collect::<Vec<&str>>();
-        let time_args = args[1].split(':').collect::<Vec<&str>>();
+        let date_args = args[0].split('-').collect::<Vec<_>>();
+        let time_args = args[1].split(':').collect::<Vec<_>>();
 
-        let year = date_args[0].parse::<i32>().unwrap();
-        let month = date_args[1].parse::<i32>().unwrap();
-        let day = date_args[2].parse::<i32>().unwrap();
-        let hour = time_args[0].parse::<i32>().unwrap();
-        let minute = time_args[1].parse::<i32>().unwrap();
+        let year = date_args[0].parse().unwrap();
+        let month = date_args[1].parse().unwrap();
+        let day = date_args[2].parse().unwrap();
+        let hour = time_args[0].parse().unwrap();
+        let minute = time_args[1].parse().unwrap();
 
         Ok(Timestamp {
             year,
@@ -69,13 +69,13 @@ impl FromStr for Record {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let args = s.split("] ").collect::<Vec<&str>>();
 
-        let timestamp = args[0].parse::<Timestamp>().unwrap();
+        let timestamp = args[0].parse().unwrap();
         let mut guard_id = -1;
         let mut event = Event::Begins;
 
-        let event_args = args[1].split_whitespace().collect::<Vec<&str>>();
+        let event_args = args[1].split_whitespace().collect::<Vec<_>>();
         match event_args[0] {
-            "Guard" => guard_id = event_args[1].trim_matches('#').parse::<i32>().unwrap(),
+            "Guard" => guard_id = event_args[1].trim_matches('#').parse().unwrap(),
             "falls" => event = Event::FallsAsleep,
             "wakes" => event = Event::WakesUp,
             &_ => panic!("unknown record: {}", s),
