@@ -1,5 +1,7 @@
 use reqwest::header;
+use std::fmt::Debug;
 use std::fs;
+use std::marker::PhantomData;
 use std::path::Path;
 use std::str::FromStr;
 use std::str::Lines;
@@ -9,6 +11,25 @@ pub struct Input {
     input: String,
 }
 
+pub struct ParsedLines<'a, T: FromStr>
+where
+    T::Err: Debug,
+{
+    lines_iter: Lines<'a>,
+    item: PhantomData<T>,
+}
+
+impl<'a, T: FromStr> Iterator for ParsedLines<'a, T>
+where
+    T::Err: Debug,
+{
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.lines_iter.next().map(|s| s.parse::<T>().unwrap())
+    }
+}
+
 impl Input {
     pub fn lines(&self) -> Lines {
         self.input.lines()
@@ -16,6 +37,16 @@ impl Input {
 
     pub fn get(self) -> String {
         self.input
+    }
+
+    pub fn parse_lines<T: FromStr>(&self) -> ParsedLines<T>
+    where
+        T::Err: Debug,
+    {
+        ParsedLines {
+            lines_iter: self.lines(),
+            item: PhantomData,
+        }
     }
 }
 

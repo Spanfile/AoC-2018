@@ -10,8 +10,8 @@ pub fn solve() {
 #[aoc(1)]
 fn solve_1(input: Input) {
     let mut answer: i32 = 0;
-    for s in input.lines() {
-        answer += s.parse::<i32>().unwrap();
+    for num in input.parse_lines::<i32>() {
+        answer += num;
     }
 
     println!("{}", answer);
@@ -19,13 +19,11 @@ fn solve_1(input: Input) {
 
 #[aoc(1)]
 fn solve_2(input: Input) {
-    let lines: Vec<&str> = input.lines().collect();
-
     let mut freqs = HashSet::new();
     let mut cur = 0;
     loop {
-        for s in &lines {
-            cur += s.parse::<i32>().unwrap();
+        for num in input.clone().parse_lines::<i32>() {
+            cur += num;
             if freqs.contains(&cur) {
                 println!("{}", cur);
                 return;
