@@ -108,6 +108,6 @@ fn solve_2(input: String) {
         }
     }
 
-    let area = dists.values().filter(|&d| d < &10000).count();
+    let area = dists.values().filter(|&d| *d < 10000).count();
     println!("{}", area);
 }
