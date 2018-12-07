@@ -1,6 +1,6 @@
 use super::runner;
+use crate::input;
 use aoc_derive::aoc;
-use input;
 
 pub fn solve() {
     runner::run_solutions(&do_solve_1, &do_solve_2);

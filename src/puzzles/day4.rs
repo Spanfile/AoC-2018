@@ -1,6 +1,6 @@
 use super::runner;
+use crate::input;
 use aoc_derive::aoc;
-use input;
 use sorted_list::SortedList;
 use std::collections::HashMap;
 use std::num::ParseIntError;

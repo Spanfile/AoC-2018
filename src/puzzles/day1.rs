@@ -1,6 +1,6 @@
 use super::runner;
+use crate::input;
 use aoc_derive::aoc;
-use input;
 use std::collections::HashSet;
 
 pub fn solve() {
