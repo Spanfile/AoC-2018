@@ -1,4 +1,4 @@
-use std::time::Instant;
+// use std::time::Instant;
 
 pub fn run_solutions(solve_1: &Fn() -> (), solve_2: &Fn() -> ()) {
     println!("1:");
@@ -9,11 +9,11 @@ pub fn run_solutions(solve_1: &Fn() -> (), solve_2: &Fn() -> ()) {
 }
 
 fn timeit(func: &Fn() -> ()) {
-    let start = Instant::now();
+    // let start = Instant::now();
     func();
-    let duration = start.elapsed();
-    println!(
-        "Time taken: {}ms",
-        duration.as_micros() as f64 / 1000 as f64
-    );
+    // let duration = start.elapsed();
+    // println!(
+    //     "Time taken: {}ms",
+    //     duration.as_micros() as f64 / 1000 as f64
+    // );
 }
