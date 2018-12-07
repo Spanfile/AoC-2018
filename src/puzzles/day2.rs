@@ -1,5 +1,5 @@
 use super::runner;
-use crate::input;
+use crate::input::{self, Input};
 use aoc_derive::aoc;
 use counter::Counter;
 
@@ -8,13 +8,11 @@ pub fn solve() {
 }
 
 #[aoc(2)]
-fn solve_1(input: String) {
-    let lines = input.lines();
-
+fn solve_1(input: Input) {
     let mut twos = 0;
     let mut threes = 0;
 
-    for s in lines {
+    for s in input.lines() {
         let letters = s.chars().collect::<Counter<_>>();
         let letter_counts: Vec<usize> = letters
             .most_common_ordered()
@@ -33,7 +31,7 @@ fn solve_1(input: String) {
 }
 
 #[aoc(2)]
-fn solve_2(input: String) {
+fn solve_2(input: Input) {
     let lines: Vec<&str> = input.lines().collect();
 
     for (i, s1) in lines[..lines.len()].iter().enumerate() {

@@ -1,5 +1,5 @@
 use super::runner;
-use crate::input;
+use crate::input::{self, Input};
 use aoc_derive::aoc;
 use std::collections::HashSet;
 
@@ -8,11 +8,9 @@ pub fn solve() {
 }
 
 #[aoc(1)]
-fn solve_1(input: String) {
-    let lines = input.lines();
-
+fn solve_1(input: Input) {
     let mut answer: i32 = 0;
-    for s in lines {
+    for s in input.lines() {
         answer += s.parse::<i32>().unwrap();
     }
 
@@ -20,7 +18,7 @@ fn solve_1(input: String) {
 }
 
 #[aoc(1)]
-fn solve_2(input: String) {
+fn solve_2(input: Input) {
     let lines: Vec<&str> = input.lines().collect();
 
     let mut freqs = HashSet::new();

@@ -1,5 +1,5 @@
 use super::runner;
-use crate::input;
+use crate::input::{self, Input};
 use aoc_derive::aoc;
 use std::collections::HashMap;
 use std::num::ParseIntError;
@@ -40,11 +40,9 @@ impl Default for Point {
 }
 
 #[aoc(6)]
-fn solve_1(input: String) {
-    let lines = input.lines();
-
+fn solve_1(input: Input) {
     let mut dists: HashMap<Point, i32> = HashMap::new();
-    for s in lines {
+    for s in input.lines() {
         let point = s.parse().unwrap();
         dists.insert(point, 0);
     }
@@ -80,11 +78,9 @@ fn solve_1(input: String) {
 }
 
 #[aoc(6)]
-fn solve_2(input: String) {
-    let lines = input.lines();
-
+fn solve_2(input: Input) {
     let mut points: Vec<Point> = Vec::new();
-    for s in lines {
+    for s in input.lines() {
         points.push(s.parse().unwrap());
     }
 

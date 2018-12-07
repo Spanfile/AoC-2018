@@ -1,5 +1,5 @@
 use super::runner;
-use crate::input;
+use crate::input::{self, Input};
 use aoc_derive::aoc;
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -68,13 +68,11 @@ pub fn solve() {
 }
 
 #[aoc(3)]
-fn solve_1(input: String) {
-    let lines = input.lines();
-
+fn solve_1(input: Input) {
     let mut fabric: HashMap<(i32, i32), i32> = HashMap::with_capacity(1301);
     let mut overlaps = 0;
 
-    for line in lines {
+    for line in input.lines() {
         let claim = line.parse::<Claim>().unwrap();
         for i in claim.plane_coords() {
             let entry = fabric.entry(i).or_insert(0);
@@ -90,14 +88,12 @@ fn solve_1(input: String) {
 }
 
 #[aoc(3)]
-fn solve_2(input: String) {
-    let lines = input.lines();
-
+fn solve_2(input: Input) {
     let mut fabric: HashMap<i32, Claim> = HashMap::new();
     let mut ids = HashSet::new();
     let mut to_delete = HashSet::new();
 
-    for line in lines {
+    for line in input.lines() {
         let claim = line.parse::<Claim>().unwrap();
 
         for (id, other) in &fabric {

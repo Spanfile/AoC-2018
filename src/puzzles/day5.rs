@@ -1,5 +1,5 @@
 use super::runner;
-use crate::input;
+use crate::input::{self, Input};
 use aoc_derive::aoc;
 
 pub fn solve() {
@@ -50,19 +50,19 @@ fn react_polymer(polymer: String) -> i32 {
 }
 
 #[aoc(5)]
-fn solve_1(input: String) {
-    println!("{}", react_polymer(input));
+fn solve_1(input: Input) {
+    println!("{}", react_polymer(input.get()));
 }
 
 #[aoc(5)]
-fn solve_2(input: String) {
+fn solve_2(input: Input) {
     let alphabet = "abcdefghijklmopqrstuvwxyz";
     let mut shortest = 1_000_000;
 
     for letter in alphabet.chars() {
-        let mut polymer = input.clone();
+        let mut polymer = input.clone().get();
         polymer.retain(|c| c.to_ascii_lowercase() != letter);
-        let reacted = react_polymer(polymer);
+        let reacted = react_polymer(polymer.to_string());
         if reacted < shortest {
             shortest = reacted;
         }

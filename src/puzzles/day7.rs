@@ -1,5 +1,5 @@
 use super::runner;
-use crate::input;
+use crate::input::{self, Input};
 use aoc_derive::aoc;
 use binary_heap_plus::*;
 use std::cmp::Ordering;
@@ -103,8 +103,8 @@ fn step_duration(step: char, work_time: i32) -> i32 {
 }
 
 #[aoc(7)]
-fn solve_1(input: String) {
-    let steps = build_steps(&input);
+fn solve_1(input: Input) {
+    let steps = build_steps(&input.get());
     let mut completed: HashSet<char> = HashSet::new();
     let mut final_order = Vec::new();
 
@@ -132,11 +132,11 @@ fn solve_1(input: String) {
 }
 
 #[aoc(7)]
-fn solve_2(input: String) {
+fn solve_2(input: Input) {
     let workers = 4 + 1;
     let work_time = 60;
 
-    let steps = build_steps(&input);
+    let steps = build_steps(&input.get());
     let mut completed: HashSet<char> = HashSet::new();
     let mut active_work: BinaryHeap<Work> = BinaryHeap::new();
     let mut next_steps = BinaryHeap::new_min();

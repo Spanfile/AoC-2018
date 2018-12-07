@@ -1,13 +1,43 @@
 use reqwest::header;
 use std::fs;
 use std::path::Path;
+use std::str::FromStr;
+use std::str::Lines;
 
-pub fn get(day: i32) -> String {
+#[derive(Clone)]
+pub struct Input {
+    input: String,
+}
+
+impl Input {
+    pub fn lines(&self) -> Lines {
+        self.input.lines()
+    }
+
+    pub fn get(self) -> String {
+        self.input
+    }
+}
+
+impl FromStr for Input {
+    type Err = ();
+    fn from_str(s: &str) -> Result<Input, ()> {
+        Ok(Input {
+            input: String::from(s),
+        })
+    }
+}
+
+pub fn get(day: i32) -> Input {
     let cached_path = String::from("cache/day") + &day.to_string();
     if Path::new(&cached_path).exists() {
-        return fs::read_to_string(cached_path).expect("error reading cache file");
+        fs::read_to_string(cached_path)
+            .expect("error reading cache file")
+            .parse()
+            .unwrap()
+    } else {
+        get_live(day).parse().unwrap()
     }
-    get_live(day)
 }
 
 fn get_live(day: i32) -> String {

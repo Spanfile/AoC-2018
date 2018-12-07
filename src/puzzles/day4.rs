@@ -1,5 +1,5 @@
 use super::runner;
-use crate::input;
+use crate::input::{self, Input};
 use aoc_derive::aoc;
 use sorted_list::SortedList;
 use std::collections::HashMap;
@@ -86,11 +86,9 @@ impl FromStr for Record {
 }
 
 #[aoc(4)]
-fn solve_1(input: String) {
-    let lines = input.lines();
-
+fn solve_1(input: Input) {
     let mut records: SortedList<Timestamp, Record> = SortedList::new();
-    for s in lines {
+    for s in input.lines() {
         let record = s.parse::<Record>().unwrap();
         records.insert(record.timestamp, record);
     }
@@ -153,11 +151,9 @@ fn solve_1(input: String) {
 }
 
 #[aoc(4)]
-fn solve_2(input: String) {
-    let lines = input.lines();
-
+fn solve_2(input: Input) {
     let mut records: SortedList<Timestamp, Record> = SortedList::new();
-    for s in lines {
+    for s in input.lines() {
         let record = s.parse::<Record>().unwrap();
         records.insert(record.timestamp, record);
     }
