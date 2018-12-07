@@ -7,10 +7,10 @@ pub fn get(day: i32) -> String {
     if Path::new(&cached_path).exists() {
         return fs::read_to_string(cached_path).expect("error reading cache file");
     }
-    get_live(&day)
+    get_live(day)
 }
 
-fn get_live(day: &i32) -> String {
+fn get_live(day: i32) -> String {
     let url = format!("https://adventofcode.com/2018/day/{}/input", day);
     let client = match reqwest::Client::builder().build() {
         Ok(client) => client,
@@ -39,7 +39,7 @@ fn get_live(day: &i32) -> String {
     input
 }
 
-fn save_to_cache(day: &i32, input: &String) {
+fn save_to_cache(day: i32, input: &str) {
     let cache_path = String::from("cache/day") + &day.to_string();
     fs::write(cache_path, input).expect("error writing to cache");
 }

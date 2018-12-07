@@ -24,11 +24,7 @@ impl FromStr for Timestamp {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let x: &[_] = &['[', ']'];
-        let args = s
-            .trim_matches(x)
-            .split_whitespace()
-            .into_iter()
-            .collect::<Vec<_>>();
+        let args = s.trim_matches(x).split_whitespace().collect::<Vec<_>>();
 
         let date_args = args[0].split('-').collect::<Vec<_>>();
         let time_args = args[1].split(':').collect::<Vec<_>>();
@@ -121,7 +117,7 @@ fn solve_1(input: String) {
 
                 let sleep_minutes: &mut HashMap<i32, i32> = guard_sleep_times
                     .entry(current_guard)
-                    .or_insert(HashMap::new());
+                    .or_insert_with(HashMap::new);
                 for minute in fell_asleep_at..timestamp.minute {
                     let sleep_minute = sleep_minutes.entry(minute).or_insert(0);
                     *sleep_minute += 1;
@@ -140,8 +136,8 @@ fn solve_1(input: String) {
     }
 
     let mut most_slept_minute = (-1, -1);
-    for (minute, count) in guard_sleep_times.get(&most_sleeping_guard.0).unwrap() {
-        if count > &most_slept_minute.1 {
+    for (minute, count) in &guard_sleep_times[&most_sleeping_guard.0] {
+        if *count > most_slept_minute.1 {
             most_slept_minute = (*minute, *count);
         }
     }
@@ -176,21 +172,12 @@ fn solve_2(input: String) {
         match record.event {
             Event::Begins => current_guard = record.guard_id,
             Event::FallsAsleep => {
-                // println!(
-                //     "guard {} falls asleep at {}:{}",
-                //     current_guard, timestamp.hour, timestamp.minute
-                // );
                 fell_asleep_at = timestamp.minute;
             }
             Event::WakesUp => {
-                // println!(
-                //     "{} fell asleep at {} and woke up at {}",
-                //     current_guard, fell_asleep_at, timestamp.minute
-                // );
-
                 for minute in fell_asleep_at..timestamp.minute {
                     let guard_sleep_time =
-                        guard_sleep_times.entry(minute).or_insert(HashMap::new());
+                        guard_sleep_times.entry(minute).or_insert_with(HashMap::new);
                     let slept_this_minute = guard_sleep_time.entry(current_guard).or_insert(0);
                     *slept_this_minute += 1;
 

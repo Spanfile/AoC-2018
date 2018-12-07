@@ -16,7 +16,7 @@ struct Point {
 }
 
 impl Point {
-    fn manhattan(&self, other: &Point) -> i32 {
+    fn manhattan(self, other: Point) -> i32 {
         (self.x - other.x).abs() + (self.y - other.y).abs()
     }
 }
@@ -58,10 +58,10 @@ fn solve_1(input: String) {
         'outer: for x in min_x..max_x {
             let point = Point { x, y };
 
-            let mut min = 10000000;
+            let mut min = 1_000_000_000;
             let mut min_point = Default::default();
             for p in dists.keys() {
-                let dist = point.manhattan(p);
+                let dist = point.manhattan(*p);
                 if dist == min {
                     continue 'outer;
                 } else if dist < min {
@@ -95,12 +95,12 @@ fn solve_2(input: String) {
 
     let mut dists: HashMap<Point, i32> = HashMap::new();
     for y in min_y..max_y {
-        'outer: for x in min_x..max_x {
+        for x in min_x..max_x {
             let point = Point { x, y };
 
             let mut total = 0;
             for p in &points {
-                total += point.manhattan(p);
+                total += point.manhattan(*p);
             }
 
             let entry = dists.entry(point).or_insert(0);

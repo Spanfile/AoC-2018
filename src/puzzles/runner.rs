@@ -14,6 +14,6 @@ fn timeit(func: &Fn() -> ()) {
     let duration = start.elapsed();
     println!(
         "Time taken: {}ms",
-        duration.as_micros() as f64 / 1000 as f64
+        duration.as_micros() as f64 / f64::from(1000)
     );
 }

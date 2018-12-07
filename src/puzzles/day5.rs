@@ -20,36 +20,28 @@ fn react_polymer(polymer: String) -> i32 {
             }
 
             if i == chars.len() - 1 {
-                &new_chars.push(*c);
+                new_chars.push(*c);
                 break;
             }
 
-            let check_next = match c.is_ascii_uppercase() {
-                true => c.to_ascii_lowercase(),
-                false => c.to_ascii_uppercase(),
+            let check_next = if c.is_ascii_uppercase() {
+                c.to_ascii_lowercase()
+            } else {
+                c.to_ascii_uppercase()
             };
 
             if chars[i + 1] == check_next {
-                // println!("{} == {}", c, chars[i + 1]);
                 drop_next = true;
                 continue;
             }
 
-            &new_chars.push(*c);
+            new_chars.push(*c);
         }
 
         if chars.len() > new_chars.len() {
-            // println!(
-            //     "{} characters dropped ({} vs {}) on iteration {}",
-            //     chars.len() - new_chars.len(),
-            //     chars.len(),
-            //     new_chars.len(),
-            //     iter
-            // );
             chars = new_chars.clone();
             new_chars.clear();
         } else {
-            // println!("no changes on iteration {}", iter);
             break;
         }
     }
@@ -65,7 +57,7 @@ fn solve_1(input: String) {
 #[aoc(5)]
 fn solve_2(input: String) {
     let alphabet = "abcdefghijklmopqrstuvwxyz";
-    let mut shortest = 1000000000;
+    let mut shortest = 1_000_000;
 
     for letter in alphabet.chars() {
         let mut polymer = input.clone();

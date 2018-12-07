@@ -10,29 +10,35 @@ struct Claim {
     pub id: i32,
     pub x: i32,
     pub y: i32,
-    pub w: i32,
-    pub h: i32,
+    pub width: i32,
+    pub height: i32,
 }
 
 impl FromStr for Claim {
     type Err = ParseIntError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let args: Vec<&str> = s.split_whitespace().into_iter().collect();
+        let args: Vec<&str> = s.split_whitespace().collect();
 
         let id = args[0][1..].parse().unwrap();
 
-        let xy: Vec<&str> = args[2].split(",").into_iter().collect();
+        let xy: Vec<&str> = args[2].split(',').collect();
         let x = xy[0].parse().unwrap();
         let y = xy[1].trim_right_matches(':').parse().unwrap();
 
-        let wh: Vec<&str> = args[3].split("x").into_iter().collect();
-        let w = wh[0].parse().unwrap();
-        let h = wh[1].parse().unwrap();
+        let wh: Vec<&str> = args[3].split('x').collect();
+        let width = wh[0].parse().unwrap();
+        let height = wh[1].parse().unwrap();
 
         // println!("#{} @ {},{}: {}x{}", id, x, y, w, h);
 
-        Ok(Claim { id, x, y, w, h })
+        Ok(Claim {
+            id,
+            x,
+            y,
+            width,
+            height,
+        })
     }
 }
 
@@ -40,8 +46,8 @@ impl Claim {
     fn plane_coords(&self) -> Vec<(i32, i32)> {
         let mut indices: Vec<(i32, i32)> = Vec::new();
 
-        for y in self.y..self.y + self.h {
-            for x in self.x..self.x + self.w {
+        for y in self.y..self.y + self.height {
+            for x in self.x..self.x + self.width {
                 indices.push((x, y));
             }
         }
@@ -50,10 +56,10 @@ impl Claim {
     }
 
     fn collides_with(&self, other: &Claim) -> bool {
-        self.x < other.x + other.w
-            && self.x + self.w > other.x
-            && self.y < other.y + other.h
-            && self.y + self.h > other.y
+        self.x < other.x + other.width
+            && self.x + self.width > other.x
+            && self.y < other.y + other.height
+            && self.y + self.height > other.y
     }
 }
 

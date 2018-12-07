@@ -63,7 +63,7 @@ impl PartialEq for Work {
     }
 }
 
-fn build_steps(input: &String) -> HashMap<char, Step> {
+fn build_steps(input: &str) -> HashMap<char, Step> {
     let lines = input.lines();
     let mut steps: HashMap<char, Step> = HashMap::new();
     for s in lines {
@@ -98,8 +98,8 @@ fn build_steps(input: &String) -> HashMap<char, Step> {
     steps
 }
 
-fn step_duration(step: &char, work_time: i32) -> i32 {
-    (*step as u8) as i32 - 64 + work_time
+fn step_duration(step: char, work_time: i32) -> i32 {
+    i32::from(step as u8) - 64 + work_time
 }
 
 #[aoc(7)]
@@ -147,13 +147,8 @@ fn solve_2(input: String) {
 
     let mut elapsed = 0;
     loop {
-        // println!("{}", elapsed);
-        // println!("{:?}", active_work);
-        // println!("{:?}", steps);
-
         while active_work.peek().is_some() && active_work.peek().unwrap().end == elapsed {
             let completed_work = active_work.pop().unwrap();
-            // println!("ending work {:?}", completed_work);
             completed.insert(completed_work.step_id);
 
             for next_id in &steps[&completed_work.step_id].next {
@@ -168,12 +163,10 @@ fn solve_2(input: String) {
         while active_work.len() < workers {
             match next_steps.pop() {
                 Some(step_id) => {
-                    let work = Work {
+                    active_work.push(Work {
                         step_id,
-                        end: step_duration(&step_id, work_time) + elapsed,
-                    };
-                    // println!("{:?}", work);
-                    active_work.push(work);
+                        end: step_duration(step_id, work_time) + elapsed,
+                    });
                 }
                 None => break,
             };
