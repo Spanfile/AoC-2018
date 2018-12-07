@@ -71,7 +71,7 @@ fn solve_1(input: String) {
     for line in lines {
         let claim = line.parse::<Claim>().unwrap();
         for i in claim.plane_coords() {
-            let mut entry = fabric.entry(i).or_insert(0);
+            let entry = fabric.entry(i).or_insert(0);
             *entry += 1;
 
             if *entry == 2 {

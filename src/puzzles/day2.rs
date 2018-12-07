@@ -15,8 +15,8 @@ fn solve_1(input: String) {
     let mut threes = 0;
 
     for s in lines {
-        let mut letters = s.chars().collect::<Counter<_>>();
-        let mut letter_counts: Vec<usize> = letters
+        let letters = s.chars().collect::<Counter<_>>();
+        let letter_counts: Vec<usize> = letters
             .most_common_ordered()
             .into_iter()
             .map(|(_, c)| c)

@@ -119,11 +119,11 @@ fn solve_1(input: String) {
                 //     current_guard, fell_asleep_at, timestamp.minute
                 // );
 
-                let mut sleep_minutes: &mut HashMap<i32, i32> = guard_sleep_times
+                let sleep_minutes: &mut HashMap<i32, i32> = guard_sleep_times
                     .entry(current_guard)
                     .or_insert(HashMap::new());
                 for minute in fell_asleep_at..timestamp.minute {
-                    let mut sleep_minute = sleep_minutes.entry(minute).or_insert(0);
+                    let sleep_minute = sleep_minutes.entry(minute).or_insert(0);
                     *sleep_minute += 1;
                 }
             }
@@ -189,9 +189,9 @@ fn solve_2(input: String) {
                 // );
 
                 for minute in fell_asleep_at..timestamp.minute {
-                    let mut guard_sleep_time =
+                    let guard_sleep_time =
                         guard_sleep_times.entry(minute).or_insert(HashMap::new());
-                    let mut slept_this_minute = guard_sleep_time.entry(current_guard).or_insert(0);
+                    let slept_this_minute = guard_sleep_time.entry(current_guard).or_insert(0);
                     *slept_this_minute += 1;
 
                     if *slept_this_minute > most_slept {

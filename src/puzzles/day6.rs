@@ -70,7 +70,7 @@ fn solve_1(input: String) {
                 }
             }
 
-            let mut entry = dists.entry(min_point).or_insert(0);
+            let entry = dists.entry(min_point).or_insert(0);
             *entry += 1;
         }
     }
@@ -103,7 +103,7 @@ fn solve_2(input: String) {
                 total += point.manhattan(p);
             }
 
-            let mut entry = dists.entry(point).or_insert(0);
+            let entry = dists.entry(point).or_insert(0);
             *entry += total;
         }
     }
