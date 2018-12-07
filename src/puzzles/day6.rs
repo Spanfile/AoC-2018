@@ -42,8 +42,7 @@ impl Default for Point {
 #[aoc(6)]
 fn solve_1(input: Input) {
     let mut dists: HashMap<Point, i32> = HashMap::new();
-    for s in input.lines() {
-        let point = s.parse().unwrap();
+    for point in input.parse_lines() {
         dists.insert(point, 0);
     }
 
@@ -79,10 +78,7 @@ fn solve_1(input: Input) {
 
 #[aoc(6)]
 fn solve_2(input: Input) {
-    let mut points: Vec<Point> = Vec::new();
-    for s in input.lines() {
-        points.push(s.parse().unwrap());
-    }
+    let points: Vec<Point> = input.parse_lines::<Point>().collect();
 
     let min_x = points.iter().map(|p| p.x).min().unwrap();
     let min_y = points.iter().map(|p| p.y).min().unwrap();

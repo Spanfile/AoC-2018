@@ -63,11 +63,9 @@ impl PartialEq for Work {
     }
 }
 
-fn build_steps(input: &str) -> HashMap<char, Step> {
-    let lines = input.lines();
+fn build_steps(input: Input) -> HashMap<char, Step> {
     let mut steps: HashMap<char, Step> = HashMap::new();
-    for s in lines {
-        let step = s.parse::<Step>().unwrap();
+    for step in input.parse_lines::<Step>() {
         let step_id = step.id;
         let next = step.next[0];
 
@@ -104,7 +102,7 @@ fn step_duration(step: char, work_time: i32) -> i32 {
 
 #[aoc(7)]
 fn solve_1(input: Input) {
-    let steps = build_steps(&input.get());
+    let steps = build_steps(input);
     let mut completed: HashSet<char> = HashSet::new();
     let mut final_order = Vec::new();
 
@@ -136,7 +134,7 @@ fn solve_2(input: Input) {
     let workers = 4 + 1;
     let work_time = 60;
 
-    let steps = build_steps(&input.get());
+    let steps = build_steps(input);
     let mut completed: HashSet<char> = HashSet::new();
     let mut active_work: BinaryHeap<Work> = BinaryHeap::new();
     let mut next_steps = BinaryHeap::new_min();

@@ -88,8 +88,7 @@ impl FromStr for Record {
 #[aoc(4)]
 fn solve_1(input: Input) {
     let mut records: SortedList<Timestamp, Record> = SortedList::new();
-    for s in input.lines() {
-        let record = s.parse::<Record>().unwrap();
+    for record in input.parse_lines::<Record>() {
         records.insert(record.timestamp, record);
     }
 
@@ -153,8 +152,7 @@ fn solve_1(input: Input) {
 #[aoc(4)]
 fn solve_2(input: Input) {
     let mut records: SortedList<Timestamp, Record> = SortedList::new();
-    for s in input.lines() {
-        let record = s.parse::<Record>().unwrap();
+    for record in input.parse_lines::<Record>() {
         records.insert(record.timestamp, record);
     }
 

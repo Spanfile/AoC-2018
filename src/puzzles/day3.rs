@@ -72,8 +72,7 @@ fn solve_1(input: Input) {
     let mut fabric: HashMap<(i32, i32), i32> = HashMap::with_capacity(1301);
     let mut overlaps = 0;
 
-    for line in input.lines() {
-        let claim = line.parse::<Claim>().unwrap();
+    for claim in input.parse_lines::<Claim>() {
         for i in claim.plane_coords() {
             let entry = fabric.entry(i).or_insert(0);
             *entry += 1;
@@ -93,9 +92,7 @@ fn solve_2(input: Input) {
     let mut ids = HashSet::new();
     let mut to_delete = HashSet::new();
 
-    for line in input.lines() {
-        let claim = line.parse::<Claim>().unwrap();
-
+    for claim in input.parse_lines::<Claim>() {
         for (id, other) in &fabric {
             if claim.collides_with(other) {
                 to_delete.insert(claim.id);
