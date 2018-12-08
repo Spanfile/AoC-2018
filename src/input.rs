@@ -57,6 +57,13 @@ impl Input {
         self.input
     }
 
+    // pub fn parse<T: FromStr>(&self) -> T
+    // where
+    //     T::Err: Debug,
+    // {
+    //     self.input.parse().unwrap()
+    // }
+
     pub fn parse_lines<T: FromStr>(&self) -> ParsedLines<T>
     where
         T::Err: Debug,

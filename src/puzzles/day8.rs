@@ -13,7 +13,7 @@ struct Node {
 
 impl Node {
     pub fn value(&self) -> i32 {
-        if self.children.len() == 0 {
+        if self.children.is_empty() {
             self.metadata.iter().sum()
         } else {
             let mut sum = 0;
@@ -28,7 +28,7 @@ impl Node {
     }
 }
 
-fn build_tree<'a, I>(values: &mut I) -> Node
+fn build_tree<I>(values: &mut I) -> Node
 where
     I: Iterator<Item = i32>,
 {

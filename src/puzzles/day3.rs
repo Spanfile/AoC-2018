@@ -1,8 +1,7 @@
 use super::runner;
 use crate::input::{self, Input};
 use aoc_derive::aoc;
-use std::collections::HashMap;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::num::ParseIntError;
 use std::str::FromStr;
 
