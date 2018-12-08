@@ -3,8 +3,7 @@ use std::fmt::Debug;
 use std::fs;
 use std::marker::PhantomData;
 use std::path::Path;
-use std::str::FromStr;
-use std::str::Lines;
+use std::str::{FromStr, Lines, SplitWhitespace};
 
 #[derive(Clone)]
 pub struct Input {
@@ -30,6 +29,25 @@ where
     }
 }
 
+pub struct ParsedSplits<'a, T: FromStr>
+where
+    T::Err: Debug,
+{
+    splits_iter: SplitWhitespace<'a>,
+    item: PhantomData<T>,
+}
+
+impl<'a, T: FromStr> Iterator for ParsedSplits<'a, T>
+where
+    T::Err: Debug,
+{
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.splits_iter.next().map(|s| s.parse::<T>().unwrap())
+    }
+}
+
 impl Input {
     pub fn lines(&self) -> Lines {
         self.input.lines()
@@ -45,6 +63,16 @@ impl Input {
     {
         ParsedLines {
             lines_iter: self.lines(),
+            item: PhantomData,
+        }
+    }
+
+    pub fn parse_split<T: FromStr>(&self) -> ParsedSplits<T>
+    where
+        T::Err: Debug,
+    {
+        ParsedSplits {
+            splits_iter: self.input.split_whitespace(),
             item: PhantomData,
         }
     }
