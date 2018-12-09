@@ -62,11 +62,11 @@ fn solve_1(_input: Input) {
 #[aoc(9)]
 fn solve_2(_input: Input) {
     let player_count = 411;
-    let last_marble_value = 7205900;
+    let last_marble_value = 7_205_900;
 
     let mut players: HashMap<i32, i64> = HashMap::new();
     let mut circle: VecDeque<i64> = VecDeque::new();
-    circle.push_back(i64::from(0));
+    circle.push_back(0);
 
     for value in 1..=last_marble_value {
         if value % 23 == 0 {
@@ -75,15 +75,15 @@ fn solve_2(_input: Input) {
                 circle.push_front(back);
             }
 
-            let score = players.entry(value % player_count).or_insert(i64::from(0));
-            *score += value as i64 + circle.pop_back().unwrap();
+            let score = players.entry(value % player_count).or_insert(0);
+            *score += i64::from(value) + circle.pop_back().unwrap();
 
             let front = circle.pop_front().unwrap();
             circle.push_back(front);
         } else {
             let front = circle.pop_front().unwrap();
             circle.push_back(front);
-            circle.push_back(value as i64);
+            circle.push_back(i64::from(value));
         }
     }
 
