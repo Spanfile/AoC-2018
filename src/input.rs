@@ -10,6 +10,7 @@ pub struct Input {
     input: String,
 }
 
+#[derive(Debug)]
 pub struct ParsedLines<'a, T: FromStr>
 where
     T::Err: Debug,
@@ -29,6 +30,7 @@ where
     }
 }
 
+#[derive(Debug)]
 pub struct ParsedSplits<'a, T: FromStr>
 where
     T::Err: Debug,
