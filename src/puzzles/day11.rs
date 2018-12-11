@@ -14,7 +14,18 @@ fn power_level(grid_serial: i32, x: i32, y: i32) -> i32 {
     power_level
 }
 
-fn find_square(grid_serial: i32, square: i32) -> (i32, i32, i32, i32) {
+fn create_grid(grid_serial: i32) -> Vec<i32> {
+    let mut grid = Vec::with_capacity(300 * 300);
+    for y in 0..300 {
+        for x in 0..300 {
+            grid.push(power_level(grid_serial, x, y));
+        }
+    }
+
+    grid
+}
+
+fn find_square(square: i32, grid: &Vec<i32>) -> (i32, i32, i32, i32) {
     let mut max = std::i32::MIN;
     let mut max_coords = (0, 0);
     let mut max_square = 1;
@@ -24,7 +35,7 @@ fn find_square(grid_serial: i32, square: i32) -> (i32, i32, i32, i32) {
             let mut power = 0;
             for cell_y in 0..square {
                 for cell_x in 0..square {
-                    power += power_level(grid_serial, x + cell_x, y + cell_y);
+                    power += grid[((x + cell_x) + (y + cell_y) * 300) as usize];
                 }
             }
 
@@ -40,22 +51,24 @@ fn find_square(grid_serial: i32, square: i32) -> (i32, i32, i32, i32) {
 }
 
 #[aoc(11)]
-fn solve_1(_input: Input) {
-    let grid_serial = 9005;
-    let best_3by3 = find_square(grid_serial, 3);
+fn solve_1(input: Input) {
+    let grid_serial = input.get().parse().unwrap();
+    let grid = create_grid(grid_serial);
+    let best_3by3 = find_square(3, &grid);
 
     println!("{},{}", best_3by3.0, best_3by3.1);
 }
 
 #[aoc(11)]
-fn solve_2(_input: Input) {
-    let grid_serial = 9005;
+fn solve_2(input: Input) {
+    let grid_serial = input.get().parse().unwrap();
+    let grid = create_grid(grid_serial);
 
     let mut max = std::i32::MIN;
     let mut best: (i32, i32, i32, i32) = (0, 0, 0, 0);
 
     for square in 1..=300 {
-        let best_power = find_square(grid_serial, square);
+        let best_power = find_square(square, &grid);
 
         if best_power.3 > max {
             max = best_power.3;
