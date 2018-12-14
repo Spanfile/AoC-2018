@@ -132,14 +132,12 @@ fn solve_1(input: Input) {
     let mut carts = Vec::new();
     let mut width = 0;
 
-    let mut x = 0;
-    let mut y = 0;
-    for line in input.lines() {
+    for (y, line) in input.lines().enumerate() {
         if width == 0 {
             width = line.len() as i32;
         }
 
-        for c in line.chars() {
+        for (x, c) in line.char_indices() {
             pieces.push(match c {
                 '-' => Piece::Straight,
                 '|' => Piece::Straight,
@@ -147,29 +145,24 @@ fn solve_1(input: Input) {
                 '\\' => Piece::CurveL,
                 '+' => Piece::Intersection,
                 '<' => {
-                    carts.push(Cart::new(x, y, Direction::Left));
+                    carts.push(Cart::new(x as i32, y as i32, Direction::Left));
                     Piece::Straight
                 }
                 '>' => {
-                    carts.push(Cart::new(x, y, Direction::Right));
+                    carts.push(Cart::new(x as i32, y as i32, Direction::Right));
                     Piece::Straight
                 }
                 '^' => {
-                    carts.push(Cart::new(x, y, Direction::Up));
+                    carts.push(Cart::new(x as i32, y as i32, Direction::Up));
                     Piece::Straight
                 }
                 'v' => {
-                    carts.push(Cart::new(x, y, Direction::Down));
+                    carts.push(Cart::new(x as i32, y as i32, Direction::Down));
                     Piece::Straight
                 }
                 _ => Piece::Empty,
             });
-
-            x += 1;
         }
-
-        x = 0;
-        y += 1;
     }
 
     let tracks = Tracks { pieces, width };

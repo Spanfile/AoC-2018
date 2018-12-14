@@ -29,7 +29,7 @@ impl Pots {
         Pots { pots }
     }
 
-    pub fn apply_rules(&mut self, rules: &Vec<Rule>) {
+    pub fn apply_rules(&mut self, rules: &[Rule]) {
         let mut new_pots = HashMap::new();
         let min = *self.pots.keys().min().unwrap() - 1;
         let max = *self.pots.keys().max().unwrap() + 1;
@@ -62,7 +62,7 @@ impl Pots {
         let max = self.pots.keys().max().unwrap();
 
         for i in *min..=*max {
-            if *self.pots.get(&i).unwrap() {
+            if self.pots[&i] {
                 print!("#");
             } else {
                 print!(".");
@@ -192,6 +192,6 @@ fn solve_2(_input: Input) {
         pots.apply_rules(&rules);
     }
 
-    let score = pots.score() as i64 + 80 * (50000000000 as i64 - 500);
+    let score = i64::from(pots.score()) + 80 * (50_000_000_000 as i64 - 500);
     println!("{}", score);
 }

@@ -25,7 +25,7 @@ fn create_grid(grid_serial: i32) -> Vec<i32> {
     grid
 }
 
-fn find_square(square: i32, grid: &Vec<i32>) -> (i32, i32, i32, i32) {
+fn find_square(square: i32, grid: &[i32]) -> (i32, i32, i32, i32) {
     let mut max = std::i32::MIN;
     let mut max_coords = (0, 0);
     let mut max_square = 1;
