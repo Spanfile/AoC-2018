@@ -2,6 +2,7 @@ mod day1;
 mod day10;
 mod day11;
 mod day12;
+mod day13;
 mod day2;
 mod day3;
 mod day4;
@@ -14,7 +15,7 @@ mod day9;
 mod runner;
 
 pub fn solve_latest() {
-    solve_day(12);
+    solve_day(13);
 }
 
 pub fn solve_day(day: i32) {
@@ -32,6 +33,7 @@ pub fn solve_day(day: i32) {
         10 => day10::solve(),
         11 => day11::solve(),
         12 => day12::solve(),
+        13 => day13::solve(),
         _ => panic!("no such day: {}", day),
     };
 }
