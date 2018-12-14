@@ -15,7 +15,7 @@ struct Pots {
 
 #[derive(Debug)]
 struct Rule {
-    pub pattern: Vec<bool>,
+    pub pattern: (bool, bool, bool, bool, bool),
     pub next: bool,
 }
 
@@ -23,34 +23,35 @@ impl Pots {
     pub fn new(initial: &str) -> Pots {
         let mut pots = HashMap::new();
         for (i, c) in initial.char_indices() {
-            if c == '#' {
-                pots.insert(i as i32, true);
-            } else {
-                pots.insert(i as i32, false);
-            }
+            pots.insert(i as i32, c == '#');
         }
 
         Pots { pots }
     }
 
     pub fn apply_rules(&mut self, rules: &Vec<Rule>) {
-        let min = self.pots.keys().min().unwrap();
-        let max = self.pots.keys().max().unwrap();
-        let mut new_pots = self.pots.clone();
+        let mut new_pots = HashMap::new();
+        let min = *self.pots.keys().min().unwrap() - 1;
+        let max = *self.pots.keys().max().unwrap() + 1;
 
-        for i in *min..=*max {
+        'outer: for i in min..=max {
+            let mut check = Vec::new();
+
+            for check_i in -2..=2 {
+                check.push(*self.pots.get(&(i + check_i)).unwrap_or(&false));
+            }
+
             for rule in rules {
-                for check_i in -2..=2 {
-                    if *self.pots.get(&(check_i + i)).unwrap_or(&false)
-                        != rule.pattern[(check_i + 2) as usize]
-                    {
-                        new_pots.insert(i, *self.pots.get(&i).unwrap());
-                        break;
-                    }
-
+                if !rule.next {
+                    continue;
+                }
+                if (check[0], check[1], check[2], check[3], check[4]) == rule.pattern {
                     new_pots.insert(i, rule.next);
+                    continue 'outer;
                 }
             }
+
+            new_pots.insert(i, false);
         }
 
         self.pots = new_pots;
@@ -70,6 +71,13 @@ impl Pots {
 
         println!();
     }
+
+    pub fn score(&self) -> i32 {
+        self.pots
+            .iter()
+            .filter_map(|(k, v)| if *v { Some(*k) } else { None })
+            .sum()
+    }
 }
 
 impl FromStr for Rule {
@@ -80,14 +88,14 @@ impl FromStr for Rule {
         let pattern = &args[0].chars().collect::<Vec<char>>();
 
         Ok(Rule {
-            pattern: vec![
+            pattern: (
                 pattern[0] == '#',
                 pattern[1] == '#',
                 pattern[2] == '#',
                 pattern[3] == '#',
                 pattern[4] == '#',
-            ],
-            next: args[1] == "#",
+            ),
+            next: args[2] == "#",
         })
     }
 }
@@ -138,13 +146,52 @@ fn solve_1(_input: Input) {
         pots.print();
     }
 
-    let sum: i32 = pots
-        .pots
-        .iter()
-        .filter_map(|(k, v)| if *v { Some(*k) } else { None })
-        .sum();
-    println!("{}", sum);
+    println!("{}", pots.score());
 }
 
 #[aoc(12)]
-fn solve_2(input: Input) {}
+fn solve_2(_input: Input) {
+    let mut pots = Pots::new("#........#.#.#...###..###..###.#..#....###.###.#.#...####..##..##.#####..##...#.#.....#...###.#.####");
+    let rules = "#..## => .
+##..# => #
+..##. => .
+.##.# => #
+..... => .
+..### => #
+###.# => #
+#.... => .
+#.##. => #
+.#.## => #
+#...# => .
+...## => .
+###.. => #
+.#..# => .
+####. => .
+....# => .
+##### => #
+.###. => .
+#..#. => .
+##... => #
+.#... => #
+#.#.# => .
+..#.. => #
+...#. => #
+##.#. => .
+.##.. => #
+.#.#. => .
+#.#.. => .
+..#.# => #
+#.### => .
+##.## => .
+.#### => #"
+        .lines()
+        .map(|l| l.parse::<Rule>().unwrap())
+        .collect::<Vec<Rule>>();
+
+    for _ in 0..500 {
+        pots.apply_rules(&rules);
+    }
+
+    let score = pots.score() as i64 + 80 * (50000000000 as i64 - 500);
+    println!("{}", score);
+}
