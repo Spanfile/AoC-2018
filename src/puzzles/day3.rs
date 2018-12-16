@@ -23,7 +23,7 @@ impl FromStr for Claim {
 
         let xy: Vec<&str> = args[2].split(',').collect();
         let x = xy[0].parse().unwrap();
-        let y = xy[1].trim_right_matches(':').parse().unwrap();
+        let y = xy[1].trim_end_matches(':').parse().unwrap();
 
         let wh: Vec<&str> = args[3].split('x').collect();
         let width = wh[0].parse().unwrap();
