@@ -62,11 +62,12 @@ fn solve_2(_input: Input) {
             break;
         }
 
-        if new_recipe_len == 2 {
-            if board.len() >= 7 && board[board.len() - 7..board.len() - 1].to_vec() == end_at {
-                println!("{}", board.len() - 7);
-                break;
-            }
+        if new_recipe_len == 2
+            && board.len() >= 7
+            && board[board.len() - 7..board.len() - 1].to_vec() == end_at
+        {
+            println!("{}", board.len() - 7);
+            break;
         }
     }
 }
