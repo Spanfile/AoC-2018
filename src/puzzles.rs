@@ -15,7 +15,7 @@ mod day9;
 mod runner;
 
 pub fn solve_latest() {
-    solve_day(12);
+    solve_day(13);
 }
 
 pub fn solve_day(day: i32) {

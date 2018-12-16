@@ -1,4 +1,5 @@
 #![feature(duration_as_u128)]
+#![feature(vec_remove_item)]
 
 mod input;
 mod puzzles;
