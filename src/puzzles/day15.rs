@@ -1,6 +1,8 @@
 use super::runner;
 use crate::input::{self, Input};
 use aoc_derive::aoc;
+use std::cell::RefCell;
+use std::collections::HashMap;
 
 pub fn solve() {
     runner::run_solutions(&do_solve_1, &do_solve_2);
@@ -12,17 +14,31 @@ enum UnitType {
     Goblin,
 }
 
+#[derive(Debug)]
+enum Tile {
+    Floor,
+    Wall,
+}
+
 #[derive(Debug, Clone)]
 struct Unit {
+    id: i32,
     x: i32,
     y: i32,
     unit_type: UnitType,
     health: i32,
 }
 
+#[derive(Debug)]
+struct Map {
+    tiles: Vec<Tile>,
+    dimension: i32,
+}
+
 impl Unit {
-    fn new(x: i32, y: i32, unit_type: UnitType) -> Unit {
+    fn new(id: i32, x: i32, y: i32, unit_type: UnitType) -> Unit {
         Unit {
+            id,
             x,
             y,
             unit_type,
@@ -40,8 +56,8 @@ impl Unit {
         );
     }
 
-    fn turn(&mut self, map: &Map, units: &Vec<&mut Unit>) -> bool {
-        let possible_targets = self.find_possible_targets(map, units);
+    fn turn(&mut self, map: &Map, units: &HashMap<i32, RefCell<Unit>>) -> bool {
+        let possible_targets = self.find_possible_targets(units);
         if possible_targets.is_empty() {
             return false;
         }
@@ -51,11 +67,17 @@ impl Unit {
         true
     }
 
-    fn find_possible_targets<'a>(&self, map: &Map, units: &'a [&mut Unit]) -> Vec<&'a mut Unit> {
+    fn find_possible_targets(&self, units: &HashMap<i32, RefCell<Unit>>) -> Vec<i32> {
         units
-            .into_iter()
-            .filter(|u| u.unit_type == self.get_opponent_type())
-            .collect::<Vec<&mut Unit>>()
+            .iter()
+            .filter_map(|(id, unit)| {
+                if *id != self.id && unit.borrow().unit_type == self.get_opponent_type() {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 
     fn get_opponent_type(&self) -> UnitType {
@@ -65,15 +87,9 @@ impl Unit {
         }
     }
 
-    fn squares_in_range(&self, map: &Map, targets: &[&mut Unit]) -> Vec<i32> {
+    fn squares_in_range(&self, map: &Map, target_units: &[i32]) -> Vec<i32> {
         vec![0]
     }
-}
-
-#[derive(Debug)]
-enum Tile {
-    Floor,
-    Wall,
 }
 
 impl Tile {
@@ -85,14 +101,8 @@ impl Tile {
     }
 }
 
-#[derive(Debug)]
-struct Map {
-    tiles: Vec<Tile>,
-    dimension: i32,
-}
-
 impl Map {
-    fn print_with_units(&self, units: &[Unit]) {
+    fn print_with_units(&self, units: Vec<&Unit>) {
         for y in 0..self.dimension {
             for x in 0..self.dimension {
                 let unit_here = units.iter().find(|u| u.x == x && u.y == y);
@@ -115,9 +125,10 @@ impl Map {
     }
 }
 
-fn parse_map(input: Input) -> (Vec<Unit>, Map) {
+fn parse_input(input: Input) -> (HashMap<i32, RefCell<Unit>>, Map, i32) {
     let mut tiles = Vec::new();
-    let mut units = Vec::new();
+    let mut units = HashMap::new();
+    let mut unit_id = 0;
 
     for (y, line) in input.lines().enumerate() {
         for (x, c) in line.trim().char_indices() {
@@ -126,11 +137,19 @@ fn parse_map(input: Input) -> (Vec<Unit>, Map) {
                 '.' => tiles.push(Tile::Floor),
                 'G' => {
                     tiles.push(Tile::Floor);
-                    units.push(Unit::new(x as i32, y as i32, UnitType::Goblin));
+                    units.insert(
+                        unit_id,
+                        RefCell::new(Unit::new(unit_id, x as i32, y as i32, UnitType::Goblin)),
+                    );
+                    unit_id += 1;
                 }
                 'E' => {
                     tiles.push(Tile::Floor);
-                    units.push(Unit::new(x as i32, y as i32, UnitType::Elf));
+                    units.insert(
+                        unit_id,
+                        RefCell::new(Unit::new(unit_id, x as i32, y as i32, UnitType::Elf)),
+                    );
+                    unit_id += 1;
                 }
                 _ => println!("unknown character {} when parsing input", c),
             }
@@ -143,16 +162,29 @@ fn parse_map(input: Input) -> (Vec<Unit>, Map) {
             tiles,
             dimension: 32,
         },
+        unit_id - 1,
     )
 }
 
 #[aoc(15)]
 fn solve_1(input: Input) {
-    let (mut units, map) = parse_map(input);
-    map.print_with_units(&units);
+    let (units, map, unit_max_id) = parse_input(input);
 
-    for mut unit in &units {
-        unit.turn(&map, &units);
+    let mut result = false;
+    let mut turn_counter = 0;
+    loop {
+        turn_counter += 1;
+        println!("Turn {}", turn_counter);
+
+        for id in 0..unit_max_id {
+            let mut unit = units[&id].borrow_mut();
+            result |= unit.turn(&map, &units);
+        }
+
+        // wtf rust, where is my do-while?
+        if !result {
+            break;
+        }
     }
 }
 
