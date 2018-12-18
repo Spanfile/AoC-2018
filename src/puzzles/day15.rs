@@ -14,7 +14,7 @@ enum UnitType {
     Goblin,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum Tile {
     Floor,
     Wall,
@@ -62,10 +62,30 @@ impl Unit {
             return false;
         }
 
-        let squares_in_range = self.squares_in_range(map, &possible_targets);
+        let squares_in_range = self.squares_in_range(map, &possible_targets, units);
+        let self_index = map.coords_to_index(self.x, self.y);
+        let mut closest = (std::f64::MAX, std::usize::MAX);
+
+        for (index, target) in &squares_in_range {
+            if self_index == *index {
+                self.attack(*target);
+                return true;
+            } else {
+                let distance = map.distance_from_to(self_index, *index);
+                if distance < closest.0 {
+                    closest = (distance, *index);
+                }
+            }
+        }
+
+        self.move_towards(closest.1);
 
         true
     }
+
+    fn attack(&self, target: i32) {}
+
+    fn move_towards(&self, point_index: usize) {}
 
     fn find_possible_targets(&self, units: &HashMap<i32, RefCell<Unit>>) -> Vec<i32> {
         units
@@ -87,8 +107,45 @@ impl Unit {
         }
     }
 
-    fn squares_in_range(&self, map: &Map, target_units: &[i32]) -> Vec<i32> {
-        vec![0]
+    fn squares_in_range(
+        &self,
+        map: &Map,
+        target_units: &[i32],
+        units: &HashMap<i32, RefCell<Unit>>,
+    ) -> Vec<(usize, i32)> {
+        let mut possible_squares = Vec::new();
+
+        for target_id in target_units {
+            let target_unit = units[&target_id].borrow();
+
+            for x_step in (-1..1).step_by(2) {
+                let check_x = target_unit.x + x_step;
+                let (index, tile) = map.get_tile_at_coords(check_x, self.y);
+                if *tile == Tile::Floor {
+                    let unit_blocking = units.iter().find(|(id, unit_cell)| {
+                        if *id == target_id || **id == self.id {
+                            return false;
+                        }
+                        let unit = unit_cell.borrow();
+                        map.coords_to_index(unit.x, unit.y) == index
+                    });
+
+                    if unit_blocking.is_none() {
+                        possible_squares.push((index, *target_id));
+                    }
+                }
+            }
+
+            for y_step in (-1..1).step_by(2) {
+                let check_y = target_unit.y + y_step;
+                let (index, tile) = map.get_tile_at_coords(self.x, check_y);
+                if *tile == Tile::Floor {
+                    possible_squares.push((index, *target_id));
+                }
+            }
+        }
+
+        possible_squares
     }
 }
 
@@ -102,26 +159,44 @@ impl Tile {
 }
 
 impl Map {
-    fn print_with_units(&self, units: Vec<&Unit>) {
+    fn print_with_units(&self, units: &HashMap<i32, RefCell<Unit>>) {
         for y in 0..self.dimension {
             for x in 0..self.dimension {
-                let unit_here = units.iter().find(|u| u.x == x && u.y == y);
+                let unit_here = units.values().find(|u| {
+                    let u = u.borrow();
+                    u.x == x && u.y == y
+                });
                 if unit_here.is_some() {
-                    unit_here.unwrap().print();
+                    unit_here.unwrap().borrow().print();
                 } else {
-                    self.get_tile_at_coords(x, y).print();
+                    self.get_tile_at_coords(x, y).1.print();
                 }
             }
             println!();
         }
     }
 
-    fn get_tile_at_coords(&self, x: i32, y: i32) -> &Tile {
-        &self.tiles[self.coords_to_index(x, y)]
+    fn get_tile_at_coords(&self, x: i32, y: i32) -> (usize, &Tile) {
+        let index = self.coords_to_index(x, y);
+        (index, &self.tiles[self.coords_to_index(x, y)])
     }
 
     fn coords_to_index(&self, x: i32, y: i32) -> usize {
         (x + y * self.dimension) as usize
+    }
+
+    fn index_to_coords(&self, index: usize) -> (i32, i32) {
+        (
+            index as i32 % self.dimension,
+            (index as i32 / self.dimension) % self.dimension,
+        )
+    }
+
+    fn distance_from_to(&self, from: usize, to: usize) -> f64 {
+        let from = self.index_to_coords(from);
+        let to = self.index_to_coords(to);
+
+        f64::from((to.0 - from.0).pow(2) + (to.1 - from.1).pow(2)).sqrt()
     }
 }
 
@@ -169,6 +244,8 @@ fn parse_input(input: Input) -> (HashMap<i32, RefCell<Unit>>, Map, i32) {
 #[aoc(15)]
 fn solve_1(input: Input) {
     let (units, map, unit_max_id) = parse_input(input);
+
+    map.print_with_units(&units);
 
     let mut result = false;
     let mut turn_counter = 0;
