@@ -78,7 +78,7 @@ impl Unit {
 
     fn turn(&mut self, cave: &Cave) -> bool {
         if !self.is_alive() {
-            // println!("{:?} {} is dead", self.unit_type, self.id);
+            println!("{:?} {} is dead", self.unit_type, self.id);
             return false;
         }
 
@@ -122,25 +122,25 @@ impl Unit {
         let mut target = cave.units[&best.1].borrow_mut();
         target.health -= self.attack_power;
 
-        // println!(
-        //     "{:?} {} at {},{} attacks {:?} {} at {},{} leaving them at {} health",
-        //     self.unit_type,
-        //     self.id,
-        //     self.x,
-        //     self.y,
-        //     target.unit_type,
-        //     target.id,
-        //     target.x,
-        //     target.y,
-        //     target.health
-        // );
+        println!(
+            "{:?} {} at {},{} attacks {:?} {} at {},{} leaving them at {} health",
+            self.unit_type,
+            self.id,
+            self.x,
+            self.y,
+            target.unit_type,
+            target.id,
+            target.x,
+            target.y,
+            target.health
+        );
     }
 
     fn move_towards(&mut self, cave: &Cave, point_index: usize) {
         let adjacent = self.get_free_adjacent(cave);
 
         if adjacent.is_empty() {
-            // println!("{:?} {} cannot move", self.unit_type, self.id);
+            println!("{:?} {} cannot move", self.unit_type, self.id);
             return;
         }
 
@@ -159,10 +159,10 @@ impl Unit {
     fn move_to_index(&mut self, cave: &Cave, index: i32) {
         let new_x = index % cave.map.dimension;
         let new_y = (index / cave.map.dimension) % cave.map.dimension;
-        // println!(
-        //     "{:?} {} moves from {},{} to {},{}",
-        //     self.unit_type, self.id, self.x, self.y, new_x, new_y
-        // );
+        println!(
+            "{:?} {} moves from {},{} to {},{}",
+            self.unit_type, self.id, self.x, self.y, new_x, new_y
+        );
         self.x = new_x;
         self.y = new_y;
     }
@@ -284,7 +284,7 @@ impl Map {
             for x in 0..self.dimension {
                 let unit_here = units.values().find(|u| {
                     let u = u.borrow();
-                    u.x == x && u.y == y
+                    u.x == x && u.y == y && u.is_alive()
                 });
                 if unit_here.is_some() {
                     unit_here.unwrap().borrow().print();
@@ -424,19 +424,19 @@ fn parse_input(input: Input) -> Cave {
 #[aoc(15)]
 fn solve_1(input: Input) {
     let cave = parse_input(input);
-    // cave.print();
+    cave.print();
 
     let mut turn_counter = 0;
     loop {
         turn_counter += 1;
-        // println!("==========\nTurn {}\n==========", turn_counter);
+        println!("==========\nTurn {}\n==========", turn_counter);
 
         // wtf rust, where is my do-while?
         if !cave.turn() {
             break;
         }
 
-        // cave.print();
+        cave.print();
     }
 
     let health_sum = cave.unit_health_sum();
