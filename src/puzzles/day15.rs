@@ -96,15 +96,23 @@ impl Unit {
         let squares_in_range = self.squares_in_range(cave, &possible_targets);
         let self_index = cave.map.coords_to_index(self.x, self.y);
         let mut closest = (std::i32::MAX, 0);
+        let mut path_found = false;
 
         for (index, _) in &squares_in_range {
-            let distance = cave.map.distance_from_to(self_index, *index);
-            if distance < closest.0 {
-                closest = (distance, *index);
+            if let Some((distance, step_to)) = cave.map.pathfind(self_index, *index) {
+                path_found = true;
+                if distance < closest.0 {
+                    closest = (distance, step_to);
+                }
             }
         }
 
-        self.move_towards(cave, closest.1);
+        if !path_found {
+            println!("{:?} {} cannot move", self.unit_type, self.id);
+            return true;
+        }
+
+        self.move_to_index(cave, closest.1);
 
         true
     }
@@ -136,27 +144,8 @@ impl Unit {
         );
     }
 
-    fn move_towards(&mut self, cave: &Cave, point_index: usize) {
-        let adjacent = self.get_free_adjacent(cave);
-
-        if adjacent.is_empty() {
-            println!("{:?} {} cannot move", self.unit_type, self.id);
-            return;
-        }
-
-        let mut best = (std::i32::MAX, 0);
-
-        for adj in &adjacent {
-            let dist = cave.map.distance_from_to(*adj, point_index);
-            if dist < best.0 {
-                best = (dist, *adj);
-            }
-        }
-
-        self.move_to_index(cave, best.1 as i32);
-    }
-
-    fn move_to_index(&mut self, cave: &Cave, index: i32) {
+    fn move_to_index(&mut self, cave: &Cave, index: usize) {
+        let index = index as i32;
         let new_x = index % cave.map.dimension;
         let new_y = (index / cave.map.dimension) % cave.map.dimension;
         println!(
@@ -312,11 +301,8 @@ impl Map {
         )
     }
 
-    fn distance_from_to(&self, from: usize, to: usize) -> i32 {
-        let from = self.index_to_coords(from);
-        let to = self.index_to_coords(to);
-
-        f64::from((to.0 - from.0).pow(2) + (to.1 - from.1).pow(2)).sqrt() as i32
+    fn pathfind(&self, from: usize, to: usize) -> Option<(i32, usize)> {
+        None
     }
 }
 
